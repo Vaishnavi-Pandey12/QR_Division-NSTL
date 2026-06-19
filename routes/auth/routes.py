@@ -1,6 +1,7 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash, session, abort
 from flask_login import login_user, logout_user, current_user
 from services.auth_service import AuthService
+from services.activity_service import ActivityService
 
 auth_bp = Blueprint("auth", __name__)
 
@@ -18,6 +19,7 @@ def login():
         user = AuthService.authenticate(request.form.get("identifier", ""), request.form.get("password", ""))
         if user:
             login_user(user)
+            ActivityService.log(user, 'Login', 'Authentication')
             session["user_id"] = user.id
             session["name"] = user.name
             session["role"] = user.role
@@ -43,6 +45,8 @@ def register():
 
 @auth_bp.route("/logout")
 def logout():
+    if current_user.is_authenticated:
+        ActivityService.log(current_user, 'Logout', 'Authentication')
     logout_user()
     session.clear()
     return redirect(url_for("auth.login"))
