@@ -1,16 +1,30 @@
 from pymongo import MongoClient, ASCENDING, DESCENDING, TEXT
 from flask import current_app
+import gridfs
 
 client = None
 db = None
-
+fs = None
 
 def init_db(app):
-    global client, db
+    global client, db, fs
+
     client = MongoClient(app.config["MONGO_URI"])
     db = client[app.config["MONGO_DB_NAME"]]
+
+    fs = gridfs.GridFS(db)
+
     create_indexes()
     return db
+
+def get_fs():
+    global fs
+
+    if fs is None:
+        database = get_db()
+        return gridfs.GridFS(database)
+
+    return fs
 
 
 def get_db():

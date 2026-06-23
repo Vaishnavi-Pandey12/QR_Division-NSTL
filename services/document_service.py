@@ -1,8 +1,9 @@
+from fileinput import filename
 import os
 from datetime import datetime, timezone
 from werkzeug.utils import secure_filename
 from flask import current_app
-from database.mongo import get_db
+from database.mongo import get_db, get_fs
 
 
 class DocumentService:
@@ -19,21 +20,31 @@ class DocumentService:
     def save_upload(file_storage):
         if not file_storage or not DocumentService.allowed_file(file_storage.filename):
             return None
-        os.makedirs(current_app.config["UPLOAD_FOLDER"], exist_ok=True)
-        filename = f"{datetime.now(timezone.utc).strftime('%Y%m%d%H%M%S%f')}_{secure_filename(file_storage.filename)}"
-        path = os.path.join(current_app.config["UPLOAD_FOLDER"], filename)
-        file_storage.save(path)
-        return filename, f"uploads/{filename}"
 
+        filename = (
+            f"{datetime.now(timezone.utc).strftime('%Y%m%d%H%M%S%f')}_"
+            f"{secure_filename(file_storage.filename)}"
+        )
+
+        fs = get_fs()
+
+        file_id = fs.put(
+            file_storage.stream,
+            filename=filename,
+            content_type=file_storage.content_type
+        )
+
+        return filename, file_id
+    
     @staticmethod
     def create_document(form, saved_file, user):
         now = datetime.now(timezone.utc)
         data = {key: (form.get(key) or "").strip() for key in form.keys()}
-        filename, file_path = saved_file if saved_file else ("", "")
+        filename, file_id = saved_file if saved_file else ("", None)
         data.update(
             {
                 "file_name": filename,
-                "file_path": file_path,
+                "file_id": file_id,
                 "uploaded_by": user.id,
                 "created_by": user.id,
                 "created_by_name": user.name,
