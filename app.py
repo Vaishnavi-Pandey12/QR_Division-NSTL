@@ -13,9 +13,11 @@ from routes.api import api_bp
 login_manager = LoginManager()
 csrf = CSRFProtect()
 
+
 @login_manager.user_loader
 def load_user(user_id):
     return AuthService.get_user_by_id(user_id)
+
 
 def create_app():
     app = Flask(__name__)
@@ -30,6 +32,7 @@ def create_app():
     app.register_blueprint(user_bp)
     app.register_blueprint(api_bp)
     return app
+
 
 app = create_app()
 

@@ -1,1 +1,73 @@
-<div class="row g-4 mb-4">{% for label,value,icon,color in [('Total Documents',stats.total_documents,'fa-file','primary'),('Pending Approvals',stats.pending_approvals,'fa-clock','warning'),('Total Users',stats.total_users,'fa-users','success'),('Uploads This Month',stats.uploads_this_month,'fa-upload','info')] %}<div class="col-md-3"><div class="card stat-card shadow-sm"><div><p>{{ label }}</p><h3>{{ value }}</h3></div><i class="fas {{ icon }} text-{{ color }}"></i></div></div>{% endfor %}</div><div class="row g-4 mb-4"><div class="col-lg-4"><div class="card p-3"><h5>Uploads per Month</h5><canvas id="uploadsChart"></canvas></div></div><div class="col-lg-4"><div class="card p-3"><h5>Documents by Division</h5><canvas id="divisionChart"></canvas></div></div><div class="col-lg-4"><div class="card p-3"><h5>Report Type Distribution</h5><canvas id="reportChart"></canvas></div></div></div><div class="card p-3"><h5>Recent Activity</h5><div class="table-responsive"><table class="table"><thead><tr><th>Date</th><th>User</th><th>Action</th><th>Entity</th><th>Status</th></tr></thead><tbody>{% for item in recent %}<tr><td>{{ item.timestamp.strftime('%d %b %Y %H:%M') if item.timestamp else '' }}</td><td>{{ item.user }}</td><td>{{ item.action }}</td><td>{{ item.entity }}</td><td><span class="badge bg-secondary">{{ item.status }}</span></td></tr>{% else %}<tr><td colspan="5" class="text-center text-muted">No recent activity.</td></tr>{% endfor %}</tbody></table></div></div>
+<div class="row g-4 mb-4">
+  {% for label,value,icon,color in [('Total
+  Documents',stats.total_documents,'fa-file','primary'),('Pending
+  Approvals',stats.pending_approvals,'fa-clock','warning'),('Total
+  Users',stats.total_users,'fa-users','success'),('Uploads This
+  Month',stats.uploads_this_month,'fa-upload','info')] %}
+  <div class="col-md-3">
+    <div class="card stat-card shadow-sm">
+      <div>
+        <p>{{ label }}</p>
+        <h3>{{ value }}</h3>
+      </div>
+      <i class="fas {{ icon }} text-{{ color }}"></i>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+<div class="row g-4 mb-4">
+  <div class="col-lg-4">
+    <div class="card p-3">
+      <h5>Uploads per Month</h5>
+      <canvas id="uploadsChart"></canvas>
+    </div>
+  </div>
+  <div class="col-lg-4">
+    <div class="card p-3">
+      <h5>Documents by Division</h5>
+      <canvas id="divisionChart"></canvas>
+    </div>
+  </div>
+  <div class="col-lg-4">
+    <div class="card p-3">
+      <h5>Report Type Distribution</h5>
+      <canvas id="reportChart"></canvas>
+    </div>
+  </div>
+</div>
+<div class="card p-3">
+  <h5>Recent Activity</h5>
+  <div class="table-responsive">
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Date</th>
+          <th>User</th>
+          <th>Action</th>
+          <th>Entity</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for item in recent %}
+        <tr>
+          <td>
+            {{ item.timestamp.strftime('%d %b %Y %H:%M') if item.timestamp else
+            '' }}
+          </td>
+          <td>{{ item.user }}</td>
+          <td>{{ item.action }}</td>
+          <td>{{ item.entity }}</td>
+          <td><span class="badge bg-secondary">{{ item.status }}</span></td>
+        </tr>
+        {% else %}
+        <tr>
+          <td colspan="5" class="text-center text-muted">
+            No recent activity.
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
