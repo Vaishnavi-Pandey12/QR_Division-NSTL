@@ -112,8 +112,8 @@ def upload():
     return render_template(
         "admin/upload.html",
         report_types=ReportService.list_report_types(),
-        #investigation_types=ReportService.list_investigation_types(),
-        #clients=ReportService.list_clients()
+        # investigation_types=ReportService.list_investigation_types(),
+        # clients=ReportService.list_clients()
     )
 
 
