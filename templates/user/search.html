@@ -2,7 +2,9 @@
 <h1 class="page-title">Advanced Search</h1>
 <form class="card p-4 mb-4">
   <div class="row g-3">
-    {% for f in ['title','content','document_number','author','year'] %}
+    {% for f in
+    ['title','content','document_number','author','year','division']
+    %}
     <div class="col-md-3">
       <input
         name="{{ f }}"
@@ -13,29 +15,23 @@
     </div>
     {% endfor %}
     <div class="col-md-3">
-      <select name="division" class="form-select">
-        <option value="">All Divisions</option>
-        {% for division in ['QR Division', 'HTD', 'DH', 'GH'] %}
-        <option value="{{ division }}" {{ 'selected' if filters.get('division') == division else '' }}>{{ division }}</option>
-        {% endfor %}
-      </select>
-    </div>
-    <div class="col-md-3">
       <select name="report_type" class="form-select">
         <option value="">All Report Types</option>
         {% for rt in report_types %}
-        <option value="{{ rt.name }}" {{ 'selected' if filters.get('report_type') == rt.name else '' }}>{{ rt.name }}</option>
+        <option value="{{ rt.name }}" {% if filters.get('report_type') == rt.name %}selected{% endif %}>{{ rt.name }}</option>
         {% endfor %}
       </select>
     </div>
+    {% for f in ['investigation_type','client','platform_type'] %}
     <div class="col-md-3">
       <input
-        name="platform_type"
-        value="{{ filters.get('platform_type','') }}"
+        name="{{ f }}"
+        value="{{ filters.get(f,'') }}"
         class="form-control"
-        placeholder="Platform Type"
+        placeholder="{{ f.replace('_',' ')|title }}"
       />
     </div>
+    {% endfor %}
     <div class="col-md-3">
       <select name="sort" class="form-select">
         <option value="created_at">Newest</option>
