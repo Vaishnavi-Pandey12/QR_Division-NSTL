@@ -5,28 +5,21 @@
     {% for f in ['title','content','document_number','author','year','division']
     %}
     <div class="col-md-3">
-      <input
-        name="{{ f }}"
-        value="{{ filters.get(f,'') }}"
-        class="form-control"
-        placeholder="{{ f.replace('_',' ')|title }}"
-      />
+      <input name="{{ f }}" value="{{ filters.get(f,'') }}" class="form-control"
+        placeholder="{{ f.replace('_',' ')|title }}" />
     </div>
     {% endfor %}
     <div class="col-md-3">
-  <select name="report_type" class="form-select">
-    <option value="">Report Type</option>
+      <select name="report_type" class="form-select">
+        <option value="">Report Type</option>
 
-    {% for rt in report_types %}
-    <option
-      value="{{ rt.name }}"
-      {% if filters.get('report_type') == rt.name %}selected{% endif %}
-    >
-      {{ rt.name }}
-    </option>
-    {% endfor %}
-  </select>
-</div>
+        {% for rt in report_types %}
+        <option value="{{ rt }}" {% if filters.get('report_type')==rt %}selected{% endif %}>
+          {{ rt }}
+        </option>
+        {% endfor %}
+      </select>
+    </div>
     <div class="col-md-3">
       <select name="sort" class="form-select">
         <option value="created_at">Newest</option>
