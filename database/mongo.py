@@ -4,27 +4,49 @@ from flask import current_app
 client = None
 db = None
 
+
 def init_db(app):
     global client, db
-    client = MongoClient(app.config['MONGO_URI'])
-    db = client[app.config['MONGO_DB_NAME']]
+    client = MongoClient(app.config["MONGO_URI"])
+    db = client[app.config["MONGO_DB_NAME"]]
     create_indexes()
     return db
+
 
 def get_db():
     global db
     if db is None:
-        client_local = MongoClient(current_app.config['MONGO_URI'])
-        return client_local[current_app.config['MONGO_DB_NAME']]
+        client_local = MongoClient(current_app.config["MONGO_URI"])
+        return client_local[current_app.config["MONGO_DB_NAME"]]
     return db
+
 
 def create_indexes():
     database = get_db()
-    database.users.create_index([('email', ASCENDING)], unique=True)
-    database.users.create_index([('phone', ASCENDING)], sparse=True)
-    database.users.create_index([('role', ASCENDING), ('is_active', ASCENDING)])
-    database.documents.create_index([('title', TEXT), ('summary', TEXT), ('document_number', TEXT), ('author', TEXT)])
-    for field in ['year', 'division', 'report_type', 'investigation_type', 'client', 'platform_type', 'created_at']:
-        database.documents.create_index([(field, ASCENDING if field != 'created_at' else DESCENDING)])
-    database.report_types.create_index([('name', ASCENDING), ('sub_type', ASCENDING)], unique=True)
-    database.activity_logs.create_index([('timestamp', DESCENDING)])
+    database.users.create_index([("email", ASCENDING)], unique=True)
+    database.users.create_index([("phone", ASCENDING)], sparse=True)
+    database.users.create_index([("role", ASCENDING), ("is_active", ASCENDING)])
+    database.documents.create_index(
+        [
+            ("title", TEXT),
+            ("summary", TEXT),
+            ("document_number", TEXT),
+            ("author", TEXT),
+        ]
+    )
+    for field in [
+        "year",
+        "division",
+        "report_type",
+        "investigation_type",
+        "client",
+        "platform_type",
+        "created_at",
+    ]:
+        database.documents.create_index(
+            [(field, ASCENDING if field != "created_at" else DESCENDING)]
+        )
+    database.report_types.create_index(
+        [("name", ASCENDING), ("sub_type", ASCENDING)], unique=True
+    )
+    database.activity_logs.create_index([("timestamp", DESCENDING)])

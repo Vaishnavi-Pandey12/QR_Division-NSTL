@@ -1,2 +1,2 @@
 class ReportType:
-    REQUIRED_FIELDS = ['name']
+    REQUIRED_FIELDS = ["name"]
