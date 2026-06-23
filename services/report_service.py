@@ -5,11 +5,18 @@ from database.mongo import get_db
 DEFAULT_REPORT_TYPES = [
     "Final Acceptance Report",
     "Issue of Boarding Pass",
-    "Failure Analysis Board",
+    "Failure Analysis Board (FAB) — Sample Format",
+    "Requisition for Inspection",
+    "Requisition for Inspection at Vendor Place",
+    "Requisition for Document Verification",
+    "Requisition for Drawing Verification",
     "Inspection Report",
     "Verification Report",
-    "Defect Report",
-    "Defect Investigation Report",
+    "Requisition for Inspection of Incoming Stores",
+    "Requisition for Inspection Support During Trials",
+    "Defect Investigation Committee Formation",
+    "Defect Report (DR)",
+    "Defect Investigation Report (DIR)",
 ]
 
 
