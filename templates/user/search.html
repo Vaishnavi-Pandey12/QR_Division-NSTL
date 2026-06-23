@@ -3,8 +3,26 @@
 <form class="card p-4 mb-4">
   <div class="row g-3">
     {% for f in
-    ['title','content','document_number','author','year','division','report_type','investigation_type','client','platform_type']
+    ['title','content','document_number','author','year','division']
     %}
+    <div class="col-md-3">
+      <input
+        name="{{ f }}"
+        value="{{ filters.get(f,'') }}"
+        class="form-control"
+        placeholder="{{ f.replace('_',' ')|title }}"
+      />
+    </div>
+    {% endfor %}
+    <div class="col-md-3">
+      <select name="report_type" class="form-select">
+        <option value="">All Report Types</option>
+        {% for rt in report_types %}
+        <option value="{{ rt.name }}" {% if filters.get('report_type') == rt.name %}selected{% endif %}>{{ rt.name }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    {% for f in ['investigation_type','client','platform_type'] %}
     <div class="col-md-3">
       <input
         name="{{ f }}"
