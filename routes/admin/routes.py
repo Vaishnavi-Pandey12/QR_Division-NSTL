@@ -110,7 +110,10 @@ def upload():
         flash("Document uploaded.", "success")
         return redirect(url_for("admin.upload"))
     return render_template(
-        "admin/upload.html", report_types=ReportService.list_report_types()
+        "admin/upload.html",
+        report_types=ReportService.list_report_types(),
+        investigation_types=ReportService.list_investigation_types(),
+        clients=ReportService.list_clients()
     )
 
 
