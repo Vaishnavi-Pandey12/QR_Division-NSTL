@@ -2,6 +2,7 @@ from flask import Blueprint, render_template, request
 from flask_login import current_user
 from services.document_service import DocumentService
 from services.activity_service import ActivityService
+from services.report_service import ReportService
 from utils.decorators import login_required
 
 user_bp = Blueprint("user", __name__, url_prefix="/user")
@@ -40,6 +41,7 @@ def search():
         filters=request.args,
         page=page,
         total=total,
+        report_types=ReportService.list_report_types(),
     )
 
 
