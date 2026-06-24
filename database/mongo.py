@@ -6,6 +6,7 @@ client = None
 db = None
 fs = None
 
+
 def init_db(app):
     global client, db, fs
 
@@ -16,6 +17,7 @@ def init_db(app):
 
     create_indexes()
     return db
+
 
 def get_fs():
     global fs

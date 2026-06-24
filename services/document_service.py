@@ -31,11 +31,11 @@ class DocumentService:
         file_id = fs.put(
             file_storage.stream,
             filename=filename,
-            content_type=file_storage.content_type
+            content_type=file_storage.content_type,
         )
 
         return filename, file_id
-    
+
     @staticmethod
     def create_document(form, saved_file, user):
         now = datetime.now(timezone.utc)
