@@ -1,141 +1,50 @@
-*{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
+:root {
+  --primary: #1f2d50;
+  --secondary: #31456e;
+  --accent: #0056b3;
+  --bg: #f4f7fc;
+  --surface: rgba(255,255,255,0.92);
+  --border: rgba(219,228,240,0.85);
 }
-
-body{
-
-    min-height:100vh;
-
-    display:flex;
-
-    justify-content:center;
-
-    align-items:center;
-
-    background: linear-gradient(
-    -45deg,
-    #667eea,
-    #764ba2,
-    #6dd5ed,
-    #2193b0
-    );
-
-    background-size:400% 400%;
-
-    animation:gradientBG 12s ease infinite;
-
-    font-family:'Segoe UI', sans-serif;
+* { margin:0; padding:0; box-sizing:border-box; }
+body {
+  min-height:100vh;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  background:
+    radial-gradient(circle at top left, rgba(0,86,179,0.16), transparent 30%),
+    linear-gradient(135deg, #eef4fb 0%, var(--bg) 44%, #dde7f5 100%);
+  font-family: Inter, "Segoe UI", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  color:#1d263b;
+  padding:24px;
 }
-
-@keyframes gradientBG{
-
-    0%{
-        background-position:0% 50%;
-    }
-
-    50%{
-        background-position:100% 50%;
-    }
-
-    100%{
-        background-position:0% 50%;
-    }
+body::before {
+  content:"QR Division NSTL";
+  position:fixed;
+  top:28px;
+  left:32px;
+  color:var(--primary);
+  font-weight:800;
+  letter-spacing:.02em;
 }
-
-.glass-card{
-
-    width:420px;
-
-    padding:35px;
-
-    border-radius:25px;
-
-    background:rgba(255,255,255,0.15);
-
-    backdrop-filter:blur(15px);
-
-    box-shadow:
-    0 8px 32px rgba(0,0,0,0.3);
-
-    color:white;
-
-    animation:slideUp 0.8s ease;
+.glass-card {
+  width:min(430px, 100%);
+  padding:36px;
+  border-radius:18px;
+  background:var(--surface);
+  border:1px solid var(--border);
+  backdrop-filter:blur(16px);
+  box-shadow:0 24px 60px rgba(31,45,80,0.16);
+  color:#1d263b;
+  animation:slideUp .55s ease;
 }
-
-@keyframes slideUp{
-
-    from{
-
-        opacity:0;
-
-        transform:translateY(50px);
-    }
-
-    to{
-
-        opacity:1;
-
-        transform:translateY(0);
-    }
-}
-
-.login-icon{
-
-    font-size:70px;
-
-    color:white;
-}
-
-.form-control{
-
-    border:none;
-
-    padding:12px;
-}
-
-.input-group-text{
-
-    border:none;
-
-    background:white;
-}
-
-.form-control:focus{
-
-    box-shadow:none;
-}
-
-.login-btn{
-
-    border-radius:12px;
-
-    padding:12px;
-
-    font-weight:bold;
-
-    transition:0.3s;
-}
-
-.login-btn:hover{
-
-    transform:translateY(-3px);
-
-    box-shadow:
-    0 10px 20px rgba(0,0,0,0.25);
-}
-
-.small-link{
-
-    text-decoration:none;
-
-    color:white;
-
-    font-weight:500;
-}
-
-.small-link:hover{
-
-    color:#ffd700;
-}
+@keyframes slideUp { from { opacity:0; transform:translateY(28px); } to { opacity:1; transform:translateY(0); } }
+.login-icon { font-size:64px; color:var(--accent); }
+.form-control { border:1px solid #d6e0ec; padding:12px; border-radius:10px; }
+.input-group-text { border:1px solid #d6e0ec; background:#f8fbff; color:var(--secondary); border-radius:10px; }
+.form-control:focus { border-color:var(--accent); box-shadow:0 0 0 .2rem rgba(0,86,179,.13); }
+.login-btn { border-radius:10px; padding:12px; font-weight:800; transition:.2s ease; background:var(--accent); border-color:var(--accent); }
+.login-btn:hover { transform:translateY(-2px); box-shadow:0 12px 24px rgba(0,86,179,.22); background:#004591; border-color:#004591; }
+.small-link { text-decoration:none; color:var(--accent); font-weight:700; }
+.small-link:hover { color:var(--primary); }

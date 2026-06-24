@@ -23,19 +23,19 @@
         <div class="logo">QR Division NSTL</div>
         <ul class="nav-list">
           <li>
-            <a href="{{ url_for('auth.index') }}"
+            <a href="{{ url_for('auth.index') }}" class="{{ 'active' if request.endpoint in ['auth.index', 'admin.dashboard', 'user.dashboard'] else '' }}"
               ><i class="fas fa-chart-pie"></i>Dashboard</a
             >
           </li>
           <li>
-            <a href="{{ url_for('user.search') }}"
+            <a href="{{ url_for('user.search') }}" class="{{ 'active' if request.endpoint == 'user.search' else '' }}"
               ><i class="fas fa-search"></i>Search</a
             >
           </li>
           {% if current_user.is_authenticated and current_user.role == 'admin'
           %}
           <li>
-            <a href="{{ url_for('admin.upload') }}"
+            <a href="{{ url_for('admin.upload') }}" class="{{ 'active' if request.endpoint == 'admin.upload' else '' }}"
               ><i class="fas fa-upload"></i>Upload</a
             >
           </li>
@@ -43,7 +43,7 @@
             <a href="#"><i class="fas fa-check"></i>Approval</a>
           </li>
           <li>
-            <a href="{{ url_for('admin.users') }}"
+            <a href="{{ url_for('admin.users') }}" class="{{ 'active' if request.endpoint in ['admin.users', 'admin.create_user', 'admin.edit_user'] else '' }}"
               ><i class="fas fa-users"></i>HR Wing</a
             >
           </li>
@@ -65,7 +65,7 @@
           %}
           <li class="section">Settings</li>
           <li>
-            <a href="{{ url_for('admin.report_types') }}"
+            <a href="{{ url_for('admin.report_types') }}" class="{{ 'active' if request.endpoint in ['admin.report_types', 'admin.edit_report_type'] else '' }}"
               ><i class="fas fa-file-alt"></i>Report Types</a
             >
           </li>
