@@ -206,12 +206,37 @@ body {
 }
 .stat-card {
   display: flex;
-  justify-content: space-between;
+  flex-direction: column;
+  justify-content: center;
   align-items: center;
+  text-align: center;
+  min-height: 180px;
   padding: 24px;
   overflow: hidden;
   position: relative;
 }
+
+.stat-card p {
+  margin: 0 0 10px;
+  color: var(--muted);
+  font-size: 0.9rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.stat-card h3 {
+  color: var(--primary);
+  font-weight: 800;
+  font-size: 42px;
+  margin: 0 0 12px;
+}
+
+.stat-card i {
+  font-size: 34px;
+  z-index: 1;
+}
+
 .stat-card::after {
   content: "";
   position: absolute;
