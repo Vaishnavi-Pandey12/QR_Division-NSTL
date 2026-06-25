@@ -4,6 +4,11 @@ from datetime import datetime, timezone
 from werkzeug.utils import secure_filename
 from flask import current_app
 from database.mongo import get_db, get_fs
+from bson import ObjectId
+import gridfs
+from flask import Response
+from flask import send_file
+
 
 
 class DocumentService:
@@ -54,6 +59,62 @@ class DocumentService:
             }
         )
         return get_db().documents.insert_one(data)
+    
+    @staticmethod
+    def get_document(document_id):
+        db = get_db()
+
+        return db.documents.find_one({
+            "_id": ObjectId(document_id)
+        })
+    
+    @staticmethod
+    def view_pdf(document_id):
+
+        db = get_db()
+
+        document = db.documents.find_one({
+            "_id": ObjectId(document_id)
+        })
+
+        fs = gridfs.GridFS(db)
+        print(document)
+        print(type(document["file_id"]))
+        print(document["file_id"])
+        pdf = fs.get(ObjectId(document["file_id"]))
+        print(pdf.filename)
+        print(pdf.content_type)
+        print(pdf.length)
+        return Response(
+            pdf.read(),
+            mimetype="application/pdf",
+            headers={
+                "Content-Disposition":
+                "inline; filename=report.pdf"
+            }
+        )
+    
+    @staticmethod
+    def download_pdf(document_id):
+
+        db = get_db()
+
+        document = db.documents.find_one({
+            "_id": ObjectId(document_id)
+        })
+
+        fs = gridfs.GridFS(db)
+
+        pdf = fs.get(ObjectId(document["file_id"]))
+
+        return Response(
+            pdf.read(),
+            mimetype="application/pdf",
+            headers={
+                "Content-Disposition":
+                f'attachment; filename="{document["title"]}.pdf"'
+            }
+        )
 
     @staticmethod
     def dashboard_stats():

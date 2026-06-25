@@ -20,6 +20,7 @@ def dashboard():
     )
 
 
+
 @user_bp.route("/search")
 @login_required
 def search():
@@ -52,3 +53,43 @@ def search():
 @login_required
 def profile():
     return render_template("user/profile.html", user=current_user)
+
+@user_bp.route("/document/<document_id>/view")
+@login_required
+def view_page(document_id):
+    document = DocumentService.get_document(document_id)
+    return render_template(
+        "user/view_pdf.html",
+        document=document
+    )
+
+
+@user_bp.route("/document/<document_id>/pdf")
+@login_required
+def view_pdf(document_id):
+    return DocumentService.view_pdf(document_id)
+
+
+@user_bp.route("/document/<document_id>")
+@login_required
+def document_details(document_id):
+    document = DocumentService.get_document(document_id)
+
+    return render_template(
+        "user/document_details.html",
+        document=document
+    )
+
+@user_bp.route("/document/<document_id>/viewer")
+@login_required
+def pdf_viewer(document_id):
+    return render_template(
+        "user/pdf_viewer.html",
+        document_id=document_id
+    )
+
+@user_bp.route("/document/<document_id>/download")
+@login_required
+def download_pdf(document_id):
+
+    return DocumentService.download_pdf(document_id)

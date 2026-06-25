@@ -104,3 +104,32 @@ body::before {
 .small-link:hover {
   color: var(--primary);
 }
+
+
+.viewer-header{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    background:#1f355e;
+    color:white;
+    padding:12px 20px;
+    border-radius:8px;
+    margin-bottom:15px;
+}
+
+.pdf-container{
+    width:100%;
+    min-height:85vh;
+    display:flex;
+    justify-content:center;
+    align-items:flex-start;
+    overflow:auto;
+    background:#dfe6f1;
+    padding:30px;
+}
+
+#pdf-render{
+    background:#fff;
+    box-shadow:0 10px 30px rgba(0,0,0,.18);
+    border-radius:4px;
+}

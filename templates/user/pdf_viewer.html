@@ -1,0 +1,103 @@
+{% extends "layouts/pdf_base.html" %}
+
+{% block content %}
+
+<div class="viewer-header">
+    <button id="prev">◀</button>
+
+    <span id="page_num">1</span>
+    /
+    <span id="page_count">1</span>
+
+    <button id="next">▶</button>
+
+    <button id="zoomOut">−</button>
+    <button id="zoomIn">+</button>
+</div>
+
+<div id="pdf-container">
+    <canvas id="pdf-render"></canvas>
+</div>
+
+<script type="module">
+
+import * as pdfjsLib from "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.5.136/pdf.min.mjs";
+
+pdfjsLib.GlobalWorkerOptions.workerSrc =
+    "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.5.136/pdf.worker.min.mjs";
+
+const url = "{{ url_for('user.view_pdf', document_id=document_id) }}";
+
+let pdfDoc = null;
+let pageNum = 1;
+let scale = 1;
+const canvas = document.getElementById("pdf-render");
+const ctx = canvas.getContext("2d");
+
+async function renderPage(num) {
+
+    const page = await pdfDoc.getPage(num);
+
+    const viewport = page.getViewport({ scale:1 });
+
+    const container = document.getElementById("pdf-container");
+
+    const fitScale =
+        (container.clientWidth - 60) / viewport.width;
+
+    const scaledViewport = page.getViewport({
+        scale: fitScale * scale
+    });
+
+    canvas.width = scaledViewport.width;
+    canvas.height = scaledViewport.height;
+
+    await page.render({
+        canvasContext: ctx,
+        viewport: scaledViewport
+    }).promise;
+
+    document.getElementById("page_num").textContent = num;
+}
+
+pdfjsLib.getDocument(url).promise.then(function(pdf) {
+
+    pdfDoc = pdf;
+
+    document.getElementById("page_count").textContent = pdf.numPages;
+
+    renderPage(pageNum);
+
+});
+
+document.getElementById("next").onclick = function () {
+    if (pageNum >= pdfDoc.numPages) return;
+    pageNum++;
+    renderPage(pageNum);
+};
+
+document.getElementById("prev").onclick = function () {
+    if (pageNum <= 1) return;
+    pageNum--;
+    renderPage(pageNum);
+};
+
+document.getElementById("zoomIn").onclick = function () {
+    scale += 0.2;
+    renderPage(pageNum);
+};
+
+document.getElementById("zoomOut").onclick = function () {
+    if (scale > 0.6) {
+        scale -= 0.2;
+        renderPage(pageNum);
+    }
+};
+
+window.addEventListener("resize", () => {
+    renderPage(pageNum);
+});
+
+</script>
+
+{% endblock %}
