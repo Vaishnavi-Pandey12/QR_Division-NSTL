@@ -45,6 +45,10 @@ class DocumentService:
     def create_document(form, saved_file, user):
         now = datetime.now(timezone.utc)
         data = {key: (form.get(key) or "").strip() for key in form.keys()}
+        report_date = data.get("report_date")
+        if report_date:
+            data["year"] = report_date[:4]
+            
         filename, file_id = saved_file if saved_file else ("", None)
         data.update(
             {
