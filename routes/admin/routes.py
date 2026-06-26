@@ -138,6 +138,7 @@ def report_types():
 @admin_required
 def edit_report_type(report_type_id):
     if request.method == "POST":
+
         ReportService.update_report_type(
             report_type_id,
             {
@@ -146,9 +147,16 @@ def edit_report_type(report_type_id):
                 "description": request.form.get("description", "").strip(),
             },
         )
-        ActivityService.log(current_user, "Edit Report Type", request.form["name"])
+
+        ActivityService.log(
+            current_user,
+            "Edit Report Type",
+            request.form["name"]
+        )
+
         flash("Report type updated.", "success")
         return redirect(url_for("admin.report_types"))
+
     return render_template(
         "admin/settings.html",
         report_types=ReportService.list_report_types(),

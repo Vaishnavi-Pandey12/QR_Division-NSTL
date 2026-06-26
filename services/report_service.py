@@ -39,7 +39,6 @@ class ReportService:
 
     @staticmethod
     def list_report_types():
-        ReportService.ensure_defaults()
         return list(get_db().report_types.find().sort("name", 1))
 
     @staticmethod
@@ -59,10 +58,34 @@ class ReportService:
 
     @staticmethod
     def update_report_type(report_type_id, payload):
-        payload["updated_at"] = datetime.now(timezone.utc)
-        return get_db().report_types.update_one(
-            {"_id": ObjectId(report_type_id)}, {"$set": payload}
+        db = get_db()
+
+        # Get the existing report type
+        existing = db.report_types.find_one(
+            {"_id": ObjectId(report_type_id)}
         )
+
+        if not existing:
+            return None
+
+        old_name = existing["name"]
+        new_name = payload["name"]
+
+        payload["updated_at"] = datetime.now(timezone.utc)
+
+        # Update report type collection
+        db.report_types.update_one(
+            {"_id": ObjectId(report_type_id)},
+            {"$set": payload}
+        )
+
+        # Update every uploaded document using this report type
+        db.documents.update_many(
+            {"report_type": old_name},
+            {"$set": {"report_type": new_name}}
+        )
+
+        return True
 
     @staticmethod
     def delete_report_type(report_type_id):
