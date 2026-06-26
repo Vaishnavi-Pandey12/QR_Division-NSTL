@@ -544,3 +544,14 @@ canvas {
     flex: 1 1 120px;
   }
 }
+
+
+.pagination .page-link {
+    color: #0d6efd;
+}
+
+.pagination .page-item.active .page-link {
+    background-color: #0d6efd;
+    border-color: #0d6efd;
+    color: #ffffff !important;
+}

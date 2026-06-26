@@ -25,24 +25,31 @@ def dashboard():
 @login_required
 def search():
     page = request.args.get("page", 1, type=int)
+    per_page = request.args.get("per_page", 10, type=int)
+
     results, total = DocumentService.search(
         request.args,
         page=page,
+        per_page=per_page,
         sort=request.args.get("sort", "created_at"),
         direction=request.args.get("direction", "desc"),
     )
+
     if request.args:
         ActivityService.log(
             current_user,
             "Search",
             ", ".join(f"{k}={v}" for k, v in request.args.items() if v),
         )
+
     return render_template(
         "user/search.html",
         results=results,
         filters=request.args,
         page=page,
         total=total,
+        per_page=per_page,
+        total_pages=(total + per_page - 1) // per_page,
         report_types=sorted(
             [rt for rt in get_db().documents.distinct("report_type") if rt]
         ),
