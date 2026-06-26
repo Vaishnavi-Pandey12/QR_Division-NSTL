@@ -1,0 +1,116 @@
+{% extends 'layouts/base.html' %}{% block content %}
+<div class="sow-upload-shell">
+    <div class="sow-upload-header">
+        <h1>Edit Report</h1>
+        <p>AI-Based Central Report Management System | NSTL</p>
+    </div>
+
+    <form class="sow-upload-form" method="POST" enctype="multipart/form-data">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+
+        <div class="sow-form-section">
+            <div class="sow-section-title">Section 1: Report Identification</div>
+            <div class="sow-field-row">
+                <label for="title">Report Name <span>*</span></label>
+                <input id="title" name="title" class="form-control" value="{{ document.title }}" required />
+            </div>
+            <div class="sow-field-row">
+                <label for="report_type">Report Type <span>*</span></label>
+                <select id="report_type" name="report_type" class="form-select" required>
+                    {% for report_type in report_types %}
+                    <option value="{{ report_type.name }}" {% if document.report_type==report_type.name %}selected{%
+                        endif %}>
+                        {{ report_type.name }}
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="sow-field-row">
+                <label for="document_number">
+                    Report ID / Reference No.
+                </label>
+
+                <input id="document_number" name="document_number" class="form-control"
+                    value="{{ document.document_number }}" />
+            </div>
+            <div class="sow-field-row">
+                <label for="division">Division / Section <span>*</span></label>
+                <select id="division" name="division" class="form-select" required>
+
+                    {% for division in ['QR Division','HTD','DH','GH'] %}
+
+                    <option value="{{ division }}" {% if document.division==division %}selected{% endif %}>
+
+                        {{ division }}
+
+                    </option>
+
+                    {% endfor %}
+
+                </select>
+            </div>
+            <div class="sow-field-row">
+                <label for="equipment">Related Machine / Equipment</label>
+                <input id="equipment" name="equipment" class="form-control" value="{{ document.equipment }}" />
+            </div>
+        </div>
+
+        <div class="sow-form-section">
+            <div class="sow-section-title">Section 2: Authorship &amp; Date</div>
+            <div class="sow-field-row">
+                <label for="author">Prepared / Submitted By <span>*</span></label>
+                <input id="author" name="author" class="form-control" value="{{ document.author }}" required />
+            </div>
+            <div class="sow-field-row">
+                <label for="report_date">Report Date <span>*</span></label>
+                <input id="report_date" name="report_date" type="date" class="form-control"
+                    value="{{ document.report_date }}" required />
+            </div>
+        </div>
+
+        <div class="sow-form-section">
+            <div class="sow-section-title">Section 3: Description</div>
+            <div class="sow-field-row sow-field-row-top">
+                <label for="summary">Brief Summary / Comments <span>*</span></label>
+                <textarea id="summary" name="summary" class="form-control" rows="3"
+                    required>{{ document.summary }}</textarea>
+            </div>
+        </div>
+
+        <div class="sow-form-section">
+            <div class="sow-section-title">Section 4: File Attachment</div>
+            <div class="sow-field-row sow-file-row">
+                <label for="document">Attach Report File <span>*</span></label>
+                <input id="document" name="document" type="file" class="form-control" accept=".pdf,.docx,.xlsx,.pptx" />
+
+                <small class="text-muted">
+                    Leave empty to keep the existing file.
+                </small>
+            </div>
+            <div class="sow-field-row sow-file-row">
+                <label for="supporting_attachments">Supporting Attachments</label>
+                <input id="supporting_attachments" name="supporting_attachments" type="file" class="form-control"
+                    multiple />
+            </div>
+        </div>
+
+        <div class="sow-form-actions">
+            <button class="btn btn-primary" type="submit">
+                Update Report
+            </button>
+
+            <a href="{{ url_for('user.document_details', document_id=document._id) }}" class="btn btn-secondary">
+
+                Cancel
+
+            </a>
+            <button class="btn btn-secondary" type="reset">Reset</button>
+            <button class="btn btn-success" type="button">Save Draft</button>
+        </div>
+        <p class="sow-required-note">
+            * Mandatory fields. Upload proceeds only after all required fields are
+            filled.
+        </p>
+    </form>
+</div>
+{% endblock %}

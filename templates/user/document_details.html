@@ -6,85 +6,98 @@
 
 <div class="row">
 
-<div class="col-md-8">
+    <div class="col-md-8">
 
-<div class="card p-4">
+        <div class="card p-4">
 
-<h4>Report Details</h4>
+            <h4>Report Details</h4>
 
-<table class="table">
+            <table class="table">
 
-<tr>
-<td>Title</td>
-<td>{{ document.title }}</td>
-</tr>
+                <tr>
+                    <td>Title</td>
+                    <td>{{ document.title }}</td>
+                </tr>
 
-<tr>
-<td>Report Type</td>
-<td>{{ document.report_type }}</td>
-</tr>
+                <tr>
+                    <td>Report Type</td>
+                    <td>{{ document.report_type }}</td>
+                </tr>
 
-<tr>
-<td>Document Number</td>
-<td>{{ document.document_number }}</td>
-</tr>
+                <tr>
+                    <td>Document Number</td>
+                    <td>{{ document.document_number }}</td>
+                </tr>
 
-<tr>
-<td>Division</td>
-<td>{{ document.division }}</td>
-</tr>
+                <tr>
+                    <td>Division</td>
+                    <td>{{ document.division }}</td>
+                </tr>
 
-<tr>
-<td>Author</td>
-<td>{{ document.author }}</td>
-</tr>
+                <tr>
+                    <td>Author</td>
+                    <td>{{ document.author }}</td>
+                </tr>
 
-<tr>
-<td>Date</td>
-<td>{{ document.report_date }}</td>
-</tr>
+                <tr>
+                    <td>Date</td>
+                    <td>{{ document.report_date }}</td>
+                </tr>
 
-<tr>
-<td>Status</td>
-<td>{{ document.status }}</td>
-</tr>
+                <tr>
+                    <td>Status</td>
+                    <td>{{ document.status }}</td>
+                </tr>
 
-</table>
+            </table>
 
-</div>
+        </div>
 
-<div class="card mt-3 p-4">
+        <div class="card mt-3 p-4">
 
-<h4>Summary</h4>
+            <h4>Summary</h4>
 
-<p>{{ document.summary }}</p>
+            <p>{{ document.summary }}</p>
 
-</div>
+        </div>
 
-</div>
-<div class="col-md-4">
+    </div>
+    <div class="col-md-4">
 
-<div class="card p-3">
+        <div class="card p-3">
+            <a href="{{ url_for('user.edit_document',
+                document_id=document._id) }}" class="btn btn-warning mb-3">
+                <i class="fas fa-edit"></i>
+                Edit
 
-<a
-class="btn btn-primary mb-3"
-href="{{ url_for('user.pdf_viewer', document_id=document._id) }}">
+            </a>
+            <a class="btn btn-primary mb-3" href="{{ url_for('user.pdf_viewer', document_id=document._id) }}">
+                <i class="fa-regular fa-eye"></i>
+                View PDF
 
-View PDF
+            </a>
+            <form action="{{ url_for('user.delete_document', document_id=document._id) }}" method="POST"
+                onsubmit="return confirm('Are you sure you want to delete this document?');" class="mb-3">
 
-</a>
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
 
-<a
-class="btn btn-success mb-3"
-href="{{ url_for('user.download_pdf', document_id=document._id) }}">
+                <button class="btn btn-danger w-100 mt-2">
+                    <i class="fas fa-trash"></i>
+                    Delete
+                </button>
 
-Download PDF
+            </form>
 
-</a>
+            <a class="btn btn-success mb-3" href="{{ url_for('user.download_pdf', document_id=document._id) }}">
+                <i class="fas fa-download"></i>
+                Download PDF
 
-</div>
+            </a>
 
-</div>
+        </div>
+
+
+    </div>
 
 </div>
 

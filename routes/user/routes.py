@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, request
+from flask import Blueprint, render_template, request, url_for
 from flask_login import current_user
 from services.document_service import DocumentService
 from services.activity_service import ActivityService
@@ -100,3 +100,48 @@ def pdf_viewer(document_id):
 def download_pdf(document_id):
 
     return DocumentService.download_pdf(document_id)
+
+
+@user_bp.route("/document/<document_id>/edit", methods=["GET", "POST"])
+@login_required
+def edit_document(document_id):
+
+    document = DocumentService.get_document(document_id)
+
+    if not document:
+        flash("Document not found.", "danger")
+        return redirect(url_for("user.search"))
+
+    if request.method == "POST":
+
+        DocumentService.update_document(
+            document_id,
+            request.form,
+            request.files.get("document")
+        )
+
+        flash("Document updated successfully.", "success")
+
+        return redirect(
+            url_for(
+                "user.document_details",
+                document_id=document_id
+            )
+        )
+
+    return render_template(
+        "user/edit_document.html",
+        document=document,
+        report_types=ReportService.list_report_types()
+    )
+
+
+@user_bp.route("/document/<document_id>/delete", methods=["POST"])
+@login_required
+def delete_document(document_id):
+
+    DocumentService.delete_document(document_id)
+
+    flash("Document deleted successfully.", "success")
+
+    return redirect(url_for("user.search"))

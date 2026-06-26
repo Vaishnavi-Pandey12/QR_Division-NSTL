@@ -10,7 +10,6 @@ from flask import Response
 from flask import send_file
 
 
-
 class DocumentService:
     @staticmethod
     def allowed_file(filename):
@@ -48,7 +47,7 @@ class DocumentService:
         report_date = data.get("report_date")
         if report_date:
             data["year"] = report_date[:4]
-            
+
         filename, file_id = saved_file if saved_file else ("", None)
         data.update(
             {
@@ -63,23 +62,19 @@ class DocumentService:
             }
         )
         return get_db().documents.insert_one(data)
-    
+
     @staticmethod
     def get_document(document_id):
         db = get_db()
 
-        return db.documents.find_one({
-            "_id": ObjectId(document_id)
-        })
-    
+        return db.documents.find_one({"_id": ObjectId(document_id)})
+
     @staticmethod
     def view_pdf(document_id):
 
         db = get_db()
 
-        document = db.documents.find_one({
-            "_id": ObjectId(document_id)
-        })
+        document = db.documents.find_one({"_id": ObjectId(document_id)})
 
         fs = gridfs.GridFS(db)
         print(document)
@@ -92,20 +87,78 @@ class DocumentService:
         return Response(
             pdf.read(),
             mimetype="application/pdf",
-            headers={
-                "Content-Disposition":
-                "inline; filename=report.pdf"
-            }
+            headers={"Content-Disposition": "inline; filename=report.pdf"},
         )
-    
+
     @staticmethod
-    def download_pdf(document_id):
+    def update_document(document_id, form):
+
+        db = get_db()
+
+        data = {key: (form.get(key) or "").strip() for key in form.keys()}
+
+        report_date = data.get("report_date")
+
+        if report_date:
+            data["year"] = report_date[:4]
+
+        data["updated_at"] = datetime.now(timezone.utc)
+
+        db.documents.update_one({"_id": ObjectId(document_id)}, {"$set": data})
+
+
+    @staticmethod
+    def update_document(document_id, form, uploaded_file):
+
+        db = get_db()
+
+        document = db.documents.find_one({"_id": ObjectId(document_id)})
+
+        data = {
+            "title": form.get("title"),
+            "report_type": form.get("report_type"),
+            "document_number": form.get("document_number"),
+            "division": form.get("division"),
+            "equipment": form.get("equipment"),
+            "author": form.get("author"),
+            "report_date": form.get("report_date"),
+            "summary": form.get("summary"),
+            "year": form.get("report_date")[:4] if form.get("report_date") else "",
+        }
+        db.documents.update_one({"_id": ObjectId(document_id)}, {"$set": data})
+
+    @staticmethod
+    def delete_document(document_id):
 
         db = get_db()
 
         document = db.documents.find_one({
             "_id": ObjectId(document_id)
         })
+
+        if not document:
+            return False
+
+        fs = get_fs()
+
+        if document.get("file_id"):
+            try:
+                fs.delete(ObjectId(document["file_id"]))
+            except Exception:
+                pass
+
+        db.documents.delete_one({
+            "_id": ObjectId(document_id)
+        })
+
+        return True
+
+    @staticmethod
+    def download_pdf(document_id):
+
+        db = get_db()
+
+        document = db.documents.find_one({"_id": ObjectId(document_id)})
 
         fs = gridfs.GridFS(db)
 
@@ -115,9 +168,8 @@ class DocumentService:
             pdf.read(),
             mimetype="application/pdf",
             headers={
-                "Content-Disposition":
-                f'attachment; filename="{document["title"]}.pdf"'
-            }
+                "Content-Disposition": f'attachment; filename="{document["title"]}.pdf"'
+            },
         )
 
     @staticmethod
